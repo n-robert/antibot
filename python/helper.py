@@ -1,6 +1,4 @@
-import math
 import os
-import traceback
 import re
 
 from telethon.events import ChatAction

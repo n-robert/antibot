@@ -2,9 +2,8 @@ import traceback
 import random
 import helper
 import sql
-from telethon import TelegramClient, Button
-from telethon.tl.functions.channels import GetFullChannelRequest, EditBannedRequest
-from telethon.tl.types import ChatBannedRights
+from telethon import TelegramClient
+from telethon.tl.functions.channels import GetFullChannelRequest
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime, timedelta
 

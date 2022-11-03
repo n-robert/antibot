@@ -4,7 +4,6 @@ import psycopg2
 import psycopg2.extras
 import json
 from dotenv import load_dotenv
-from operator import itemgetter
 
 load_dotenv()
 

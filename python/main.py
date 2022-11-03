@@ -1,8 +1,5 @@
 import asyncio
 import os
-from pprint import pprint
-from telethon.tl.functions.channels import GetFullChannelRequest
-
 import sql
 import helper
 from dotenv import load_dotenv
@@ -24,11 +21,7 @@ async def main():
     @client.on(events.ChatAction())
     async def handler(event):
         if event.user_joined or event.user_left:
-            # pprint(f'{event.user.id} - {event.user.first_name}')
             await helper.do(client, event)
-            # channel = helper.get_channel(event)['entity']
-            # chat_full = await client(GetFullChannelRequest(channel=channel))
-            # pprint(chat_full.full_chat.participants_count)
 
     @client.on(events.NewMessage(func=helper.check))
     async def handler(event):

@@ -1,8 +1,6 @@
 import os
 import re
-
 from telethon.events import ChatAction
-
 import sql
 from telethon import Button
 from telethon.tl.types import ChannelParticipantCreator, ChannelParticipantAdmin, PeerUser
@@ -36,7 +34,10 @@ suffixes = {
     },
 }
 
-custom_admins = list(map(lambda x: int(x.strip()), os.environ['CUSTOM_ADMINS'].split(',')))
+custom_admins = list(map(
+    lambda x: int(x.strip()),
+    os.environ['CUSTOM_ADMINS'].split(',')
+)) if os.environ['CUSTOM_ADMINS'] else []
 
 user_commands = {
     **Commands.user_commands.copy(),
@@ -63,7 +64,6 @@ async def can(client, event, command) -> bool:
 
     user = await get_user(event)
     channel = await get_channel(event)
-    print(channel)
 
     participant = await client(
         GetParticipantRequest(channel=channel, participant=user)
@@ -100,7 +100,6 @@ async def do(client, event):
 
 
 async def get_command(event):
-    print(event)
     channel = await get_channel(event)
     user = await get_user(event)
     all_commands = {**user_commands.copy(), **admin_commands.copy()}
@@ -108,7 +107,7 @@ async def get_command(event):
 
     # Show captcha to new joined user
     if (hasattr(event, 'user_joined') and event.user_joined):
-        return ['do_captcha', None]
+        return ['on_user_joined', None]
 
     if hasattr(event, 'user_left') and event.user_left:
         kwargs = {
@@ -120,7 +119,7 @@ async def get_command(event):
             }
         }
 
-        return ['user_left', kwargs]
+        return ['on_user_left', kwargs]
 
     if hasattr(event, 'message'):
         # Resolve new user's answer

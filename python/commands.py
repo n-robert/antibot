@@ -1,3 +1,4 @@
+import re
 import traceback
 import random
 import helper
@@ -71,7 +72,7 @@ class Commands:
         self.scheduler = AsyncIOScheduler()
         self.scheduler.start()
 
-    async def do_captcha(self, event):
+    async def on_user_joined(self, event):
         channel = await helper.get_channel(event)
         user = await helper.get_user(event)
         mention = f'<a href="tg://user?id={user.id}">{user.first_name}</a>'
@@ -131,7 +132,7 @@ class Commands:
 
         if (command := args.get('answer')) \
                 and ((answer := str(eval(command)).lower())
-                     and answer == str(event.message.message).strip().lower()):
+                     and re.search(rf'(^|\W){answer}\W*', event.message.message, re.IGNORECASE)):
             await self.remove_args(event=event, keys=['answer', 'pending', 'token'])
             message = random.choice(self.messages['greeting'])
         else:
@@ -179,7 +180,7 @@ class Commands:
         except BaseException:
             traceback.print_exc()
 
-    async def user_left(self, event, **kwargs):
+    async def on_user_left(self, event, **kwargs):
         self.update_status(**kwargs)
 
     async def remove_args(self, event, **kwargs):

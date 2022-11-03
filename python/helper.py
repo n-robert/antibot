@@ -110,7 +110,6 @@ async def get_command(event):
         return ['on_user_joined', None]
 
     if (hasattr(event, 'user_left') and event.user_left) or (hasattr(event, 'user_kicked') and event.user_kicked):
-        print(event)
         kwargs = {
             'data': {
                 'chat_id': channel.id,

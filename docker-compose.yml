@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+
+  python:
+    container_name: python-antibot
+    build: ./python
+    image: python
+    tty: true
+    depends_on:
+      - db
+
+  db:
+    container_name: pgsql-antibot
+    build: ./pgsql
+    image: pgsql
+    ports:
+      - "5437:5432"
+    volumes:
+      - ./pgsql/init:/docker-entrypoint-initdb.d
+#      - ./backup/daily/antibot-latest.sql.gz:/docker-entrypoint-initdb.d/antibot-latest.sql.gz
+      - ./pgsql/pgdata:/var/lib/postgresql
+    environment:
+      - POSTGRES_DB=antibot
+      - POSTGRES_USER=antibot
+      - POSTGRES_PASSWORD=antibot
+
+  pgbackup:
+    container_name: backup-antibot
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    volumes:
+      - ./backup:/backups
+    links:
+      - db:db
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=antibot
+      - POSTGRES_USER=antibot
+      - POSTGRES_PASSWORD=antibot
+      - POSTGRES_EXTRA_OPTS=-Z9 --schema=public --blobs
+      - SCHEDULE=@daily
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=81

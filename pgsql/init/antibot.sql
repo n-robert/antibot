@@ -15,8 +15,8 @@ SET default_table_access_method = heap;
 
 DO $$
 BEGIN
-  CREATE ROLE brotherbot WITH LOGIN SUPERUSER PASSWORD 'brotherbot';
+  CREATE ROLE antibot WITH LOGIN SUPERUSER PASSWORD 'antibot';
   EXCEPTION WHEN DUPLICATE_OBJECT THEN
-  RAISE NOTICE 'not creating role brotherbot -- it already exists';
+  RAISE NOTICE 'not creating role antibot -- it already exists';
 END
 $$;

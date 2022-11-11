@@ -40,7 +40,7 @@ services:
       - POSTGRES_DB=antibot
       - POSTGRES_USER=antibot
       - POSTGRES_PASSWORD=antibot
-      - POSTGRES_EXTRA_OPTS=-Z9 --schema=public --blobs
+      - POSTGRES_EXTRA_OPTS=-Z9
       - SCHEDULE=@daily
       - BACKUP_KEEP_DAYS=7
       - BACKUP_KEEP_WEEKS=4
